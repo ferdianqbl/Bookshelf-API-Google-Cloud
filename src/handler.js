@@ -164,4 +164,127 @@ const getBookDetailByIdHandler = (req, res) => {
   return response;
 };
 
-module.exports = { addBookHandler, getAllBooksHandler, getBookDetailByIdHandler };
+const editBookByIdHandler = (req, res) => {
+  const { bookId } = req.params;
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+  } = req.payload;
+
+  const updatedAt = new Date().toISOString();
+
+  // input checking
+  if (name === undefined) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. Mohon isi nama buku',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  if (year === undefined) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. Mohon isi tahun buku',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  if (author === undefined) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. Mohon isi author buku',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  if (summary === undefined) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. Mohon isi summary buku',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  if (publisher === undefined) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi publisher buku',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  if (reading === undefined) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. Mohon isi status sudah dibaca atau belum',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  if (readPage > pageCount) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  // find old book
+  const indexOldBook = books.findIndex((book) => book.id === bookId);
+
+  if (indexOldBook !== -1) {
+    books[indexOldBook] = {
+      ...books[indexOldBook],
+      name,
+      year,
+      author,
+      summary,
+      publisher,
+      pageCount,
+      readPage,
+      reading,
+      updatedAt,
+    };
+
+    const response = res.response({
+      status: 'success',
+      message: 'Buku berhasil diperbarui',
+    });
+
+    response.code(200);
+    return response;
+  }
+
+  const response = res.response({
+    status: 'fail',
+    message: 'Gagal memperbarui buku. Id tidak ditemukan',
+  });
+
+  response.code(404);
+  return response;
+};
+
+module.exports = {
+  addBookHandler, getAllBooksHandler, getBookDetailByIdHandler, editBookByIdHandler,
+};
