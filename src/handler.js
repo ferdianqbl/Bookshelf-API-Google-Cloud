@@ -143,16 +143,16 @@ const getAllBooksHandler = (req, res) => {
 
   // book filter by reading
   if (reading !== undefined) {
-    if (Number(reading) === 1) showedBooks = books.filter((book) => Number(book.reading) === 1);
-
-    if (Number(reading) === 0) showedBooks = books.filter((book) => Number(book.reading) === 0);
+    showedBooks = books.filter(
+      (book) => Number(book.reading) === Number(reading),
+    );
   }
 
   // book filter by finished
   if (finished !== undefined) {
-    if (Number(finished) === 1) showedBooks = books.filter((book) => Number(book.finished) === 1);
-
-    if (Number(finished) === 0) showedBooks = books.filter((book) => Number(book.finished) === 0);
+    showedBooks = books.filter(
+      (book) => Number(book.finished) === Number(finished),
+    );
   }
 
   const response = res.response({
