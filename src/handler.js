@@ -167,7 +167,6 @@ const getAllBooksHandler = (req, res) => {
             id: filteredBook.id,
             name: filteredBook.name,
             publisher: filteredBook.publisher,
-            reading: filteredBook.reading,
           })),
         },
       });
@@ -186,7 +185,6 @@ const getAllBooksHandler = (req, res) => {
             id: filteredBook.id,
             name: filteredBook.name,
             publisher: filteredBook.publisher,
-            reading: filteredBook.reading,
           })),
         },
       });
@@ -203,7 +201,6 @@ const getAllBooksHandler = (req, res) => {
         id: book.id,
         name: book.name,
         publisher: book.publisher,
-        reading: book.reading,
       })),
     },
   });
