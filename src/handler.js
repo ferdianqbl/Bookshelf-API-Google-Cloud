@@ -133,16 +133,42 @@ const addBookHandler = (req, res) => {
   return response;
 };
 
-const getAllBooksHandler = () => ({
-  status: 'success',
-  data: {
-    books: books.map((book) => ({
-      id: book.id,
-      name: book.name,
-      publisher: book.publisher,
-    })),
-  },
-});
+const getAllBooksHandler = (req, res) => {
+  const { name } = req.query;
+
+  if (name !== undefined) {
+    // book filter by name
+    const filteredBooks = books.filter((book) => new RegExp(name, 'i').exec(book.name));
+
+    const response = res.response({
+      status: 'success',
+      data: {
+        books: filteredBooks.map((filteredBook) => ({
+          id: filteredBook.id,
+          name: filteredBook.name,
+          publisher: filteredBook.publisher,
+        })),
+      },
+    });
+
+    response.code(200);
+    return response;
+  }
+
+  const response = res.response({
+    status: 'success',
+    data: {
+      books: books.map((book) => ({
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher,
+      })),
+    },
+  });
+
+  response.code(200);
+  return response;
+};
 
 const getBookDetailByIdHandler = (req, res) => {
   const { bookId } = req.params;
@@ -317,10 +343,48 @@ const deleteBookByIdHandler = (req, res) => {
 };
 
 // optional
+const getAllBooksByNameQueryHandler = (req, res) => {
+  const { name } = req.query;
+
+  if (name !== undefined) {
+    const pattern1 = /^[a-zA-Z]+.*$/;
+    const pattern2 = /^.*[a-zA-Z]+.*$/;
+    const pattern3 = /^.*[a-zA-Z]+$/;
+
+    const filteredBooks = books.map(
+      (book) => pattern1.test(book.name)
+        || pattern2.test(book.name)
+        || pattern3.test(book.name),
+    );
+
+    const response = res.response({
+      status: 'success',
+      data: {
+        books: filteredBooks.map((filteredBook) => ({
+          id: filteredBook.id,
+          name: filteredBook.name,
+          publisher: filteredBook.publisher,
+        })),
+      },
+    });
+
+    response.code(200);
+    return response;
+  }
+
+  const response = res.response({
+    status: 'fail',
+    message: 'Buku tidak ditemukan',
+  });
+
+  response.code(404);
+  return response;
+};
 
 module.exports = {
   addBookHandler,
   getAllBooksHandler,
+  getAllBooksByNameQueryHandler,
   getBookDetailByIdHandler,
   editBookByIdHandler,
   deleteBookByIdHandler,
