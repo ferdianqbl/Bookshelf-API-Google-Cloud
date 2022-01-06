@@ -148,6 +148,7 @@ const getAllBooksHandler = (req, res) => {
     if (Number(reading) === 0) showedBooks = books.filter((book) => Number(book.reading) === 0);
   }
 
+  // book filter by finished
   if (finished !== undefined) {
     if (Number(finished) === 1) showedBooks = books.filter((book) => Number(book.finished) === 1);
 
@@ -169,7 +170,7 @@ const getAllBooksHandler = (req, res) => {
   return response;
 };
 
-const getBookDetailByIdHandler = (req, res) => {
+const getBookDetailHandler = (req, res) => {
   const { bookId } = req.params;
 
   const book = books.filter((item) => item.id === bookId)[0];
@@ -192,7 +193,7 @@ const getBookDetailByIdHandler = (req, res) => {
   return response;
 };
 
-const editBookByIdHandler = (req, res) => {
+const editBookHandler = (req, res) => {
   const { bookId } = req.params;
   const {
     name,
@@ -315,7 +316,7 @@ const editBookByIdHandler = (req, res) => {
   return response;
 };
 
-const deleteBookByIdHandler = (req, res) => {
+const deleteBookHandler = (req, res) => {
   const { bookId } = req.params;
 
   const bookIndexWillBeDeleted = books.findIndex((book) => book.id === bookId);
@@ -344,7 +345,7 @@ const deleteBookByIdHandler = (req, res) => {
 module.exports = {
   addBookHandler,
   getAllBooksHandler,
-  getBookDetailByIdHandler,
-  editBookByIdHandler,
-  deleteBookByIdHandler,
+  getBookDetailHandler,
+  editBookHandler,
+  deleteBookHandler,
 };
