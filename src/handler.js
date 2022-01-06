@@ -68,7 +68,8 @@ const addBookHandler = (req, res) => {
   if (reading === undefined) {
     const response = res.response({
       status: 'fail',
-      message: 'Gagal menambahkan buku. Mohon isi status sudah dibaca atau belum',
+      message:
+        'Gagal menambahkan buku. Mohon isi status sudah dibaca atau belum',
     });
 
     response.code(400);
@@ -78,7 +79,8 @@ const addBookHandler = (req, res) => {
   if (readPage > pageCount) {
     const response = res.response({
       status: 'fail',
-      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+      message:
+        'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
     });
 
     response.code(400);
@@ -233,7 +235,8 @@ const editBookByIdHandler = (req, res) => {
   if (reading === undefined) {
     const response = res.response({
       status: 'fail',
-      message: 'Gagal memperbarui buku. Mohon isi status sudah dibaca atau belum',
+      message:
+        'Gagal memperbarui buku. Mohon isi status sudah dibaca atau belum',
     });
 
     response.code(400);
@@ -243,7 +246,8 @@ const editBookByIdHandler = (req, res) => {
   if (readPage > pageCount) {
     const response = res.response({
       status: 'fail',
-      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
+      message:
+        'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
     });
 
     response.code(400);
@@ -285,6 +289,36 @@ const editBookByIdHandler = (req, res) => {
   return response;
 };
 
+const deleteBookByIdHandler = (req, res) => {
+  const { bookId } = req.params;
+
+  const bookIndexWillBeDeleted = books.findIndex((book) => book.id === bookId);
+
+  if (bookIndexWillBeDeleted !== -1) {
+    books.splice(bookIndexWillBeDeleted, 1);
+
+    const response = res.response({
+      status: 'success',
+      message: 'Buku berhasil dihapus',
+    });
+
+    response.code(200);
+    return response;
+  }
+
+  const response = res.response({
+    status: 'fail',
+    message: 'Buku gagal dihapus. Id tidak ditemukan',
+  });
+
+  response.code(404);
+  return response;
+};
+
 module.exports = {
-  addBookHandler, getAllBooksHandler, getBookDetailByIdHandler, editBookByIdHandler,
+  addBookHandler,
+  getAllBooksHandler,
+  getBookDetailByIdHandler,
+  editBookByIdHandler,
+  deleteBookByIdHandler,
 };
