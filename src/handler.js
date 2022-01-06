@@ -134,10 +134,10 @@ const addBookHandler = (req, res) => {
 };
 
 const getAllBooksHandler = (req, res) => {
-  const { name } = req.query;
+  const { name, reading } = req.query;
 
+  // book filter by name
   if (name !== undefined) {
-    // book filter by name
     const filteredBooks = books.filter((book) => new RegExp(name, 'i').exec(book.name));
 
     const response = res.response({
@@ -155,6 +155,47 @@ const getAllBooksHandler = (req, res) => {
     return response;
   }
 
+  // book filter by reading
+  if (reading !== undefined) {
+    if (Number(reading) === 1) {
+      const filteredBooks = books.filter((book) => Number(book.reading) === 1);
+
+      const response = res.response({
+        status: 'success',
+        data: {
+          books: filteredBooks.map((filteredBook) => ({
+            id: filteredBook.id,
+            name: filteredBook.name,
+            publisher: filteredBook.publisher,
+            reading: filteredBook.reading,
+          })),
+        },
+      });
+
+      response.code(200);
+      return response;
+    }
+
+    if (Number(reading) === 0) {
+      const filteredBooks = books.filter((book) => Number(book.reading) === 0);
+
+      const response = res.response({
+        status: 'success',
+        data: {
+          books: filteredBooks.map((filteredBook) => ({
+            id: filteredBook.id,
+            name: filteredBook.name,
+            publisher: filteredBook.publisher,
+            reading: filteredBook.reading,
+          })),
+        },
+      });
+
+      response.code(200);
+      return response;
+    }
+  }
+
   const response = res.response({
     status: 'success',
     data: {
@@ -162,6 +203,7 @@ const getAllBooksHandler = (req, res) => {
         id: book.id,
         name: book.name,
         publisher: book.publisher,
+        reading: book.reading,
       })),
     },
   });
