@@ -1,6 +1,7 @@
 const { nanoid } = require('nanoid');
 const books = require('./books');
 
+// primary
 const addBookHandler = (req, res) => {
   // declare all key
   const {
@@ -314,6 +315,8 @@ const deleteBookByIdHandler = (req, res) => {
   response.code(404);
   return response;
 };
+
+// optional
 
 module.exports = {
   addBookHandler,
