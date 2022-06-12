@@ -16,30 +16,10 @@ const addBookHandler = (req, res) => {
   } = req.payload;
 
   // input checking
-  if (name === undefined) {
-    const response = res.response({
-      status: 'fail',
-      message: 'Gagal menambahkan buku. Mohon isi nama buku',
-    });
-
-    response.code(400);
-    return response;
-  }
-
   if (year === undefined) {
     const response = res.response({
       status: 'fail',
       message: 'Gagal menambahkan buku. Mohon isi tahun buku',
-    });
-
-    response.code(400);
-    return response;
-  }
-
-  if (author === undefined) {
-    const response = res.response({
-      status: 'fail',
-      message: 'Gagal menambahkan buku. Mohon isi author buku',
     });
 
     response.code(400);
@@ -56,10 +36,20 @@ const addBookHandler = (req, res) => {
     return response;
   }
 
-  if (publisher === undefined) {
+  if (name === undefined) {
     const response = res.response({
       status: 'fail',
-      message: 'Gagal menambahkan buku. Mohon isi publisher buku',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  if (author === undefined) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi author buku',
     });
 
     response.code(400);
@@ -71,6 +61,16 @@ const addBookHandler = (req, res) => {
       status: 'fail',
       message:
         'Gagal menambahkan buku. Mohon isi status sudah dibaca atau belum',
+    });
+
+    response.code(400);
+    return response;
+  }
+
+  if (publisher === undefined) {
+    const response = res.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi publisher buku',
     });
 
     response.code(400);
@@ -136,21 +136,21 @@ const addBookHandler = (req, res) => {
 const getAllBooksHandler = (req, res) => {
   const { name, reading, finished } = req.query;
 
-  let showedBooks = books;
+  let getBooksSuccess = [...books];
 
   // book filter by name
-  if (name !== undefined) showedBooks = books.filter((book) => new RegExp(name, 'i').exec(book.name));
+  if (name !== undefined) { getBooksSuccess = books.filter((book) => new RegExp(name, 'i').exec(book.name)); }
 
   // book filter by reading
   if (reading !== undefined) {
-    showedBooks = books.filter(
+    getBooksSuccess = books.filter(
       (book) => Number(book.reading) === Number(reading),
     );
   }
 
   // book filter by finished
   if (finished !== undefined) {
-    showedBooks = books.filter(
+    getBooksSuccess = books.filter(
       (book) => Number(book.finished) === Number(finished),
     );
   }
@@ -158,7 +158,7 @@ const getAllBooksHandler = (req, res) => {
   const response = res.response({
     status: 'success',
     data: {
-      books: showedBooks.map((book) => ({
+      books: getBooksSuccess.map((book) => ({
         id: book.id,
         name: book.name,
         publisher: book.publisher,
@@ -176,12 +176,15 @@ const getBookDetailHandler = (req, res) => {
   const book = books.filter((item) => item.id === bookId)[0];
 
   if (book !== undefined) {
-    return {
+    const response = res.response({
       status: 'success',
       data: {
         book,
       },
-    };
+    });
+
+    response.code(200);
+    return response;
   }
 
   const response = res.response({
